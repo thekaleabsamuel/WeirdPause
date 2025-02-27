@@ -4,12 +4,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { motion } from 'framer-motion';
 import Particles from 'react-tsparticles';
-import { loadFull } from 'tsparticles';
-import { useEffect } from 'react';
+import { loadSlim } from 'tsparticles-slim'; // Use loadSlim
+import { useEffect, useCallback, useState } from 'react';
 
 const Landing = () => {
+    const [particlesInitialized, setParticlesInitialized] = useState(false);
+    const [particlesError, setParticlesError] = useState(null);
+    const [particlesContainer, setParticlesContainer] = useState(null);
+
     useEffect(() => {
-        // Smooth scrolling for navigation links
         document.querySelectorAll('a.nav-link').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -17,11 +20,51 @@ const Landing = () => {
                 document.getElementById(targetId).scrollIntoView({ behavior: 'smooth' });
             });
         });
+
+        console.log("Landing component mounted");
+
+        return () => {
+            if (particlesContainer) {
+                particlesContainer.destroy();
+            }
+        };
+    }, [particlesContainer]);
+
+    const particlesInit = useCallback(async (engine) => {
+        console.log("Starting to initialize particles engine...");
+        console.log("Engine object:", engine); // Debug log
+        try {
+            await loadSlim(engine); // Use loadSlim
+            console.log("Particles engine initialized successfully");
+            setParticlesInitialized(true);
+        } catch (error) {
+            console.error("Failed to initialize particles:", error);
+            setParticlesError(error.message);
+        }
+    }, []);
+
+    const particlesLoaded = useCallback(async (container) => {
+        console.log("Particles container loaded:", container);
+        setParticlesContainer(container);
+
+        if (container) {
+            const canvas = container.canvas.element;
+            if (canvas) {
+                console.log("Particles canvas properties:", {
+                    width: canvas.width,
+                    height: canvas.height,
+                    visible: canvas.style.visibility !== "hidden",
+                    display: canvas.style.display !== "none",
+                    zIndex: canvas.style.zIndex
+                });
+            } else {
+                console.warn("Particles canvas element not found");
+            }
+        }
     }, []);
 
     return (
         <>
-            {/* Navigation Bar */}
             <nav className="navbar navbar-expand-lg navbar-dark bg-black fixed-top">
                 <div className="container">
                     <a className="navbar-brand" href="#">Weird Pause</a>
@@ -39,51 +82,78 @@ const Landing = () => {
                 </div>
             </nav>
 
-            {/* Main Section */}
-            <section id="main" className="d-flex align-items-center justify-content-center text-white text-center vh-100 bg-dark">
-                <div>
-                    <h1>Weird Pause</h1>
-                    <p className="lead">We create sleek and modern experiences.</p>
-                    <a href="#whatwedo" className="btn btn-outline-light">Learn More</a>
-                </div>
-            </section>
-
-            {/* What We Do Section */}
-            <section id="whatwedo" className="py-5 bg-light">
-                <div className="container text-center">
-                    <h2 className="text-light">What We Do</h2>
-                    <p className="lead text-secondary">We specialize in creating content that is essential for growing your business</p>
-                    <div className="row mt-4">
-                        <div className="col-md-4">
-                            <i className="bi bi-laptop display-4 text-light"></i>
-                            <h4 className="text-light">Content Creation</h4>
-                            <p className="text-secondary">Crafting beautiful and responsive videos.</p>
-                        </div>
-                        <div className="col-md-4">
-                            <i className="bi bi-code-slash display-4 text-light"></i>
-                            <h4 className="text-light">Web Development</h4>
-                            <p className="text-secondary">Building powerful and scalable web applications.</p>
-                        </div>
-                        <div className="col-md-4">
-                            <i className="bi bi-bar-chart display-4 text-light"></i>
-                            <h4 className="text-light">SEO Optimization</h4>
-                            <p className="text-secondary">Ensuring your website ranks high on search engines.</p>
-                        </div>
+            <section id="main" className="d-flex align-items-center justify-content-center text-white text-center vh-100 bg-dark" style={{ position: "relative", overflow: "hidden" }}>
+                {particlesError && (
+                    <div style={{ position: "absolute", top: 10, left: 10, background: "rgba(255,0,0,0.7)", padding: "5px", borderRadius: "5px", zIndex: 100 }}>
+                        Particles error: {particlesError}
                     </div>
+                )}
+                
+                <Particles
+                    id="tsparticles"
+                    init={particlesInit}
+                    loaded={particlesLoaded}
+                    options={{
+    fullScreen: { enable: false }, // Keeps it inside the section
+    particles: {
+        number: { value: 50 },
+        color: { value: "#ffffff" },
+        shape: { type: "circle" },
+        opacity: { value: 0.5 },
+        size: { value: { min: 1, max: 3 } },
+        move: {
+            enable: true, // Ensures animation happens
+            speed: 2, // Speed of particles
+            direction: "none",
+            random: false,
+            straight: false,
+            outModes: { default: "out" }
+        }
+    },
+    interactivity: {
+        events: {
+            onHover: { enable: true, mode: "repulse" },
+            onClick: { enable: true, mode: "push" }
+        },
+        modes: {
+            repulse: { distance: 100, duration: 0.4 },
+            push: { quantity: 4 }
+        }
+    }
+}}
+                    style={{
+                        position: "absolute",
+                        width: "100%",
+                        height: "100%",
+                        top: 0,
+                        left: 0,
+                        zIndex: 1,
+                    }}
+                />
+                
+                <div className="container" style={{ position: "relative", zIndex: 5 }}>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1 }}
+                    >
+                        <h1 className="display-3 fw-bold">Weird Pause</h1>
+                        <p className="lead">We create sleek and modern experiences.</p>
+                        <a href="#whatwedo" className="btn btn-outline-light btn-lg mt-3">Learn More</a>
+                    </motion.div>
                 </div>
             </section>
-
             {/* Our Work Section */}
             <section id="ourwork" className="py-5 bg-white">
                 <div className="container text-center">
-                    <h2 className="text-light">Our Work</h2>
+                    <h2 className="text-light">Our Expertise</h2>
                     <p className="lead text-secondary">Here are some of our recent projects.</p>
                     <div className="row mt-4">
                         <div className="col-md-4">
                             <div className="card border-0 shadow-sm">
                                 <img src="https://via.placeholder.com/350x200" className="card-img-top" alt="Project 1" />
                                 <div className="card-body">
-                                    <h5 className="card-title text-light">Project One</h5>
+                                    <h5 className="card-title text-light">Editing</h5>
                                     <p className="card-text text-secondary">A modern web project with sleek design.</p>
                                 </div>
                             </div>
@@ -92,7 +162,7 @@ const Landing = () => {
                             <div className="card border-0 shadow-sm">
                                 <img src="https://via.placeholder.com/350x200" className="card-img-top" alt="Project 2" />
                                 <div className="card-body">
-                                    <h5 className="card-title text-light">Project Two</h5>
+                                    <h5 className="card-title text-light">Social Media Integration</h5>
                                     <p className="card-text text-secondary">A seamless user experience.</p>
                                 </div>
                             </div>
@@ -101,7 +171,7 @@ const Landing = () => {
                             <div className="card border-0 shadow-sm">
                                 <img src="https://via.placeholder.com/350x200" className="card-img-top" alt="Project 3" />
                                 <div className="card-body">
-                                    <h5 className="card-title text-light">Project Three</h5>
+                                    <h5 className="card-title text-light">Product Management</h5>
                                     <p className="card-text text-secondary">A bold and creative website.</p>
                                 </div>
                             </div>
