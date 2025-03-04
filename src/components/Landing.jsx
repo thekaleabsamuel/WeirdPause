@@ -139,7 +139,16 @@ const Landing = () => {
                     >
                         <h1 className="display-3 fw-bold">Weird Pause</h1>
                         <p className="lead">We create sleek and modern experiences.</p>
-                        <a href="#whatwedo" className="btn btn-outline-light btn-lg mt-3">Learn More</a>
+                        <a 
+    href="#ourwork" 
+    className="btn btn-outline-light btn-lg mt-3"
+    onClick={(e) => {
+        e.preventDefault(); // Prevent default anchor link behavior
+        document.querySelector("#ourwork").scrollIntoView({ behavior: "smooth" });
+    }}
+>
+    Learn More
+</a>
                     </motion.div>
                 </div>
             </section>
@@ -151,7 +160,7 @@ const Landing = () => {
                     <div className="row mt-4">
                         <div className="col-md-4">
                             <div className="card border-0 shadow-sm">
-                                <img src="public/assets/content.png" className="card-img-top" alt="Project 1" />
+                                <img src="dist/assets/content.png" className="card-img-top" alt="Project 1" />
                                 <div className="card-body">
                                     <h5 className="card-title text-light">Content Production</h5>
                                     <p className="card-text text-secondary">Bring your corporate needs to life with our team of higly skilled and talented content producers</p>
@@ -160,7 +169,7 @@ const Landing = () => {
                         </div>
                         <div className="col-md-4">
                             <div className="card border-0 shadow-sm">
-                                <img src="public/assets/social.png" className="card-img-top" alt="Project 2" />
+                                <img src="dist/assets/social.png" className="card-img-top" alt="Project 2" />
                                 <div className="card-body">
                                     <h5 className="card-title text-light">Social Media Integration</h5>
                                     <p className="card-text text-secondary">Help bring new life into your business as we help you expand your business into the social media platforms best suited to your cause.</p>
@@ -169,7 +178,7 @@ const Landing = () => {
                         </div>
                         <div className="col-md-4">
                             <div className="card border-0 shadow-sm">
-                            <img src="public/assets/product.png" className="card-img-top" alt="Project 3" style={{ width: "90%" }} />
+                            <img src="dist/assets/product.png" className="card-img-top" alt="Project 3" style={{ width: "90%" }} />
                             <div className="card-body">
                                     <h5 className="card-title text-light">Product Management</h5>
                                     <p className="card-text text-secondary">Our team will work closely with yours to help faciliate, plan and execute the release and development of products from inception to rollout.</p>
