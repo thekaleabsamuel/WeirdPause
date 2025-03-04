@@ -74,7 +74,7 @@ const Landing = () => {
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav ms-auto">
                             <li className="nav-item"><a className="nav-link" href="#main">Home</a></li>
-                            <li className="nav-item"><a className="nav-link" href="#whatwedo">What We Do</a></li>
+                            {/* <li className="nav-item"><a className="nav-link" href="#whatwedo">What We Do</a></li> */}
                             <li className="nav-item"><a className="nav-link" href="#ourwork">Our Work</a></li>
                             <li className="nav-item"><a className="nav-link" href="#contact">Contact</a></li>
                         </ul>
@@ -144,35 +144,35 @@ const Landing = () => {
                 </div>
             </section>
             {/* Our Work Section */}
-            <section id="ourwork" className="py-5 bg-white">
-                <div className="container text-center">
+            <section id="ourwork" className="py-5 custom-bg">
+            <div className="container text-center">
                     <h2 className="text-light">Our Expertise</h2>
-                    <p className="lead text-secondary">Here are some of our recent projects.</p>
+                    <p className="lead text-secondary">The things we do best.</p>
                     <div className="row mt-4">
                         <div className="col-md-4">
                             <div className="card border-0 shadow-sm">
-                                <img src="https://via.placeholder.com/350x200" className="card-img-top" alt="Project 1" />
+                                <img src="dist/assets/content.png" className="card-img-top" alt="Project 1" />
                                 <div className="card-body">
-                                    <h5 className="card-title text-light">Editing</h5>
-                                    <p className="card-text text-secondary">A modern web project with sleek design.</p>
+                                    <h5 className="card-title text-light">Content Production</h5>
+                                    <p className="card-text text-secondary">Bring your corporate needs to life with our team of higly skilled and talented content producers</p>
                                 </div>
                             </div>
                         </div>
                         <div className="col-md-4">
                             <div className="card border-0 shadow-sm">
-                                <img src="https://via.placeholder.com/350x200" className="card-img-top" alt="Project 2" />
+                                <img src="dist/assets/social.png" className="card-img-top" alt="Project 2" />
                                 <div className="card-body">
                                     <h5 className="card-title text-light">Social Media Integration</h5>
-                                    <p className="card-text text-secondary">A seamless user experience.</p>
+                                    <p className="card-text text-secondary">Help bring new life into your business as we help you expand your business into the social media platforms best suited to your cause.</p>
                                 </div>
                             </div>
                         </div>
                         <div className="col-md-4">
                             <div className="card border-0 shadow-sm">
-                                <img src="https://via.placeholder.com/350x200" className="card-img-top" alt="Project 3" />
-                                <div className="card-body">
+                            <img src="dist/assets/product.png" className="card-img-top" alt="Project 3" />
+                            <div className="card-body">
                                     <h5 className="card-title text-light">Product Management</h5>
-                                    <p className="card-text text-secondary">A bold and creative website.</p>
+                                    <p className="card-text text-secondary">Our team will work closely with yours to help faciliate, plan and execute the release and development of products from inception to rollout.</p>
                                 </div>
                             </div>
                         </div>
@@ -181,7 +181,7 @@ const Landing = () => {
             </section>
 
             {/* Contact Us Section */}
-            <section id="contact" className="py-5 bg-black text-white">
+            <section id="contact" className="py-5 custom-bg">
                 <div className="container text-center">
                     <h2>Contact Us</h2>
                     <p className="lead text-light">We'd love to hear from you. Get in touch!</p>
