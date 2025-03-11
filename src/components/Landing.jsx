@@ -3,15 +3,9 @@ import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { motion } from 'framer-motion';
-import Particles from 'react-tsparticles';
-import { loadSlim } from 'tsparticles-slim'; // Use loadSlim
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect } from 'react';
 
 const Landing = () => {
-    const [particlesInitialized, setParticlesInitialized] = useState(false);
-    const [particlesError, setParticlesError] = useState(null);
-    const [particlesContainer, setParticlesContainer] = useState(null);
-
     useEffect(() => {
         document.querySelectorAll('a.nav-link').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -20,47 +14,6 @@ const Landing = () => {
                 document.getElementById(targetId).scrollIntoView({ behavior: 'smooth' });
             });
         });
-
-        console.log("Landing component mounted");
-
-        return () => {
-            if (particlesContainer) {
-                particlesContainer.destroy();
-            }
-        };
-    }, [particlesContainer]);
-
-    const particlesInit = useCallback(async (engine) => {
-        console.log("Starting to initialize particles engine...");
-        console.log("Engine object:", engine); // Debug log
-        try {
-            await loadSlim(engine); // Use loadSlim
-            console.log("Particles engine initialized successfully");
-            setParticlesInitialized(true);
-        } catch (error) {
-            console.error("Failed to initialize particles:", error);
-            setParticlesError(error.message);
-        }
-    }, []);
-
-    const particlesLoaded = useCallback(async (container) => {
-        console.log("Particles container loaded:", container);
-        setParticlesContainer(container);
-
-        if (container) {
-            const canvas = container.canvas.element;
-            if (canvas) {
-                console.log("Particles canvas properties:", {
-                    width: canvas.width,
-                    height: canvas.height,
-                    visible: canvas.style.visibility !== "hidden",
-                    display: canvas.style.display !== "none",
-                    zIndex: canvas.style.zIndex
-                });
-            } else {
-                console.warn("Particles canvas element not found");
-            }
-        }
     }, []);
 
     return (
@@ -74,7 +27,6 @@ const Landing = () => {
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav ms-auto">
                             <li className="nav-item"><a className="nav-link" href="#main">Home</a></li>
-                            {/* <li className="nav-item"><a className="nav-link" href="#whatwedo">What We Do</a></li> */}
                             <li className="nav-item"><a className="nav-link" href="#ourwork">Our Work</a></li>
                             <li className="nav-item"><a className="nav-link" href="#contact">Contact</a></li>
                         </ul>
@@ -83,54 +35,10 @@ const Landing = () => {
             </nav>
 
             <section id="main" className="d-flex align-items-center justify-content-center text-white text-center vh-100 bg-dark" style={{ position: "relative", overflow: "hidden" }}>
-                {particlesError && (
-                    <div style={{ position: "absolute", top: 10, left: 10, background: "rgba(255,0,0,0.7)", padding: "5px", borderRadius: "5px", zIndex: 100 }}>
-                        Particles error: {particlesError}
-                    </div>
-                )}
-                
-                <Particles
-                    id="tsparticles"
-                    init={particlesInit}
-                    loaded={particlesLoaded}
-                    options={{
-    fullScreen: { enable: false }, // Keeps it inside the section
-    particles: {
-        number: { value: 50 },
-        color: { value: "#ffffff" },
-        shape: { type: "circle" },
-        opacity: { value: 0.5 },
-        size: { value: { min: 1, max: 3 } },
-        move: {
-            enable: true, // Ensures animation happens
-            speed: 2, // Speed of particles
-            direction: "none",
-            random: false,
-            straight: false,
-            outModes: { default: "out" }
-        }
-    },
-    interactivity: {
-        events: {
-            onHover: { enable: true, mode: "repulse" },
-            onClick: { enable: true, mode: "push" }
-        },
-        modes: {
-            repulse: { distance: 100, duration: 0.4 },
-            push: { quantity: 4 }
-        }
-    }
-}}
-                    style={{
-                        position: "absolute",
-                        width: "100%",
-                        height: "100%",
-                        top: 0,
-                        left: 0,
-                        zIndex: 1,
-                    }}
-                />
-                
+                <video autoPlay loop muted playsInline style={{ position: "absolute", width: "100%", height: "100%", objectFit: "cover", top: 0, left: 0, zIndex: 1 }}>
+                    <source src="dist/assets/weirdpause.mp4" type="video/mp4" />
+                </video>
+
                 <div className="container" style={{ position: "relative", zIndex: 5 }}>
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -140,21 +48,21 @@ const Landing = () => {
                         <h1 className="display-3 fw-bold">Weird Pause</h1>
                         <p className="lead">We create sleek and modern experiences.</p>
                         <a 
-    href="#ourwork" 
-    className="btn btn-outline-light btn-lg mt-3"
-    onClick={(e) => {
-        e.preventDefault(); // Prevent default anchor link behavior
-        document.querySelector("#ourwork").scrollIntoView({ behavior: "smooth" });
-    }}
->
-    Learn More
-</a>
+                            href="#ourwork" 
+                            className="btn btn-outline-light btn-lg mt-3"
+                            onClick={(e) => {
+                                e.preventDefault(); 
+                                document.querySelector("#ourwork").scrollIntoView({ behavior: "smooth" });
+                            }}
+                        >
+                            Learn More
+                        </a>
                     </motion.div>
                 </div>
             </section>
-            {/* Our Work Section */}
+
             <section id="ourwork" className="py-5 custom-bg">
-            <div className="container text-center">
+                <div className="container text-center">
                     <h2 className="text-light">Our Expertise</h2>
                     <p className="lead text-secondary">The things we do best.</p>
                     <div className="row mt-4">
@@ -163,7 +71,7 @@ const Landing = () => {
                                 <img src="dist/assets/content.png" className="card-img-top" alt="Project 1" />
                                 <div className="card-body">
                                     <h5 className="card-title text-light">Content Production</h5>
-                                    <p className="card-text text-secondary">Bring your corporate needs to life with our team of higly skilled and talented content producers</p>
+                                    <p className="card-text text-secondary">Bring your corporate needs to life with our team of highly skilled and talented content producers.</p>
                                 </div>
                             </div>
                         </div>
@@ -178,10 +86,10 @@ const Landing = () => {
                         </div>
                         <div className="col-md-4">
                             <div className="card border-0 shadow-sm">
-                            <img src="dist/assets/product.png" className="card-img-top" alt="Project 3" style={{ width: "90%" }} />
-                            <div className="card-body">
+                                <img src="dist/assets/product.png" className="card-img-top" alt="Project 3" style={{ width: "90%" }} />
+                                <div className="card-body">
                                     <h5 className="card-title text-light">Product Management</h5>
-                                    <p className="card-text text-secondary">Our team will work closely with yours to help faciliate, plan and execute the release and development of products from inception to rollout.</p>
+                                    <p className="card-text text-secondary">Our team will work closely with yours to help facilitate, plan, and execute the release and development of products from inception to rollout.</p>
                                 </div>
                             </div>
                         </div>
@@ -189,7 +97,6 @@ const Landing = () => {
                 </div>
             </section>
 
-            {/* Contact Us Section */}
             <section id="contact" className="py-5 custom-bg">
                 <div className="container text-center">
                     <h2>Contact Us</h2>
@@ -207,7 +114,6 @@ const Landing = () => {
                 </div>
             </section>
 
-            {/* Footer */}
             <footer className="text-center py-3 bg-dark text-white">
                 <p className="mb-0">&copy; 2025 Weird Pause. All Rights Reserved.</p>
             </footer>
