@@ -5,8 +5,18 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 const ThreeJSLogo = () => {
     const mountRef = useRef(null);
+    const sceneRef = useRef(null);
 
     useEffect(() => {
+        // Check if we've already created a scene
+        if (sceneRef.current || !mountRef.current) return;
+        
+        // Check if there's already a canvas in this container
+        if (mountRef.current.querySelector('canvas')) return;
+        
+        // Create scene only once
+        sceneRef.current = true;
+        
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true });
@@ -21,16 +31,22 @@ const ThreeJSLogo = () => {
         };
 
         // Append the renderer's DOM element to the mountRef
-        if (mountRef.current) {
-            mountRef.current.appendChild(renderer.domElement);
-            setRendererSize(); // Set initial size
-        }
+        mountRef.current.appendChild(renderer.domElement);
+        setRendererSize(); // Set initial size
 
         // Add OrbitControls
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.1;
         controls.rotateSpeed = 0.5;
+        
+        // Add lighting to better see the model
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(0, 10, 10);
+        scene.add(directionalLight);
 
         const loader = new GLTFLoader();
         loader.load('dist/assets/wplogo.glb', (gltf) => {
@@ -43,7 +59,7 @@ const ThreeJSLogo = () => {
             box.getCenter(center);
             model.position.sub(center);
 
-            // Adjust camera position and model scaling
+            // Adjust camera position
             camera.position.z = 5;
             model.scale.set(0.5, 0.5, 0.5);
         });
@@ -67,10 +83,12 @@ const ThreeJSLogo = () => {
             if (mountRef.current) {
                 mountRef.current.removeChild(renderer.domElement);
             }
+            // Reset sceneRef when component unmounts
+            sceneRef.current = null;
         };
     }, []);
 
-    return <div ref={mountRef} className="threejs-logo-container" />;
+    return <div ref={mountRef} className="threejs-logo-container" style={{ width: '100%', height: '100%' }} />;
 };
 
 export default ThreeJSLogo;
